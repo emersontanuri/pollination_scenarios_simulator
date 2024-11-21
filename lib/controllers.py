@@ -1,4 +1,5 @@
 import streamlit as st
+from scipy.stats import norm
 from schemas.set import PlantSet
 
 @st.dialog("Adicionar novo grupo de plantas")
@@ -38,3 +39,10 @@ def add_set(idx: int = None):
         else:
             st.session_state.plant_sets.append(new_plant_set)
         st.rerun()
+
+def generate_positive_sample(mean, std):
+    """Gera um valor positivo de uma distribuição normal."""
+    sample = norm.rvs(mean, std)
+    while sample <= 0:
+        sample = norm.rvs(mean, std)
+    return sample
