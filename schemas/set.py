@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 from collections import Counter
-from lib.controllers import generate_positive_sample
+from lib.utils import generate_positive_sample
 
 class PlantSetBase(BaseModel):
   set_name: str

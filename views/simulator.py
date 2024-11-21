@@ -47,7 +47,7 @@ def simulator():
   col2.write('O gráfico empilhado exibe o número total (somatório dos grupos) de flores em cada dia de floração, enquanto cria camadas separadas para cada grupo de plantas.')
   viz_type = col2.radio('Tipo de visualização', ['Empilhado', 'Camadas'])
 
-  if st.button('Gerar simulação de janela de polinização', type='primary'):
+  if st.button('Gerar simulação de janela de polinização', type='primary', disabled=len(st.session_state.plant_sets) == 0):
     df_list = []
     for s in st.session_state.plant_sets:
       s.get_flowers_per_plant()
