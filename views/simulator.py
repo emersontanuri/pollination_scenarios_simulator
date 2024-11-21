@@ -40,7 +40,7 @@ def simulator():
       if exp.button(':material/delete:', key=str(index) + 'delete'):
         st.session_state.plant_sets = [s for i, s in enumerate(st.session_state.plant_sets) if i != index]
         st.rerun()
-        
+
   # Selecionar se quer ver o gráfico de área ou de barras
   col1, col2 = st.columns(2)
   col1.markdown('### Tipo de gráfico')
@@ -52,6 +52,7 @@ def simulator():
   col2.write('O gráfico empilhado exibe o número total (somatório dos grupos) de flores em cada dia de floração, enquanto cria camadas separadas para cada grupo de plantas.')
   viz_type = col2.radio('Tipo de visualização', ['Empilhado', 'Camadas'])
 
+  st.write('A depender da quantidade de dados gerados, o gráfico pode demorar um pouco para ser exibido.')
   if st.button('Gerar simulação de janela de polinização', type='primary', disabled=len(st.session_state.plant_sets) == 0):
     df_list = []
     for s in st.session_state.plant_sets:
@@ -69,9 +70,9 @@ def simulator():
     df = df.pivot(index='flowering_date', columns='plant_set', values='flower_count')
 
     if chart_type == 'Gráfico de barras':
-      st.bar_chart(df, stack=True if viz_type == 'Empilhado' else 'layered')
+      st.bar_chart(df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
     else:
-      st.area_chart(df, stack=True if viz_type == 'Empilhado' else 'layered')
+      st.area_chart(df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
 
     expander = st.expander('Dados gerados')
     expander.write('Abaixo estão os dados gerados para cada grupo de plantas adicionado:')
