@@ -36,6 +36,17 @@ def simulator():
         st.session_state.show_add_set = True
         add_set(index)
 
+  # Selecionar se quer ver o gráfico de área ou de barras
+  col1, col2 = st.columns(2)
+  col1.markdown('### Tipo de gráfico')
+  col1.write('O gráfico de área é ideal se selecionar a opção de visualização em camadas, pois permite melhor visualizar a sincronia de floração entre os grupos de plantas.')
+  chart_type = col1.radio('Tipo de gráfico', ['Gráfico de barras', 'Gráfico de área'])
+
+  # Selecionar se quer o gráfico empilhado ou em camadas
+  col2.markdown('### Tipo de visualização')
+  col2.write('O gráfico empilhado exibe o número total (somatório dos grupos) de flores em cada dia de floração, enquanto cria camadas separadas para cada grupo de plantas.')
+  viz_type = col2.radio('Tipo de visualização', ['Empilhado', 'Camadas'])
+
   if st.button('Gerar simulação de janela de polinização', type='primary'):
     df_list = []
     for s in st.session_state.plant_sets:
@@ -52,6 +63,13 @@ def simulator():
     df = pd.concat(df_list, axis=0)
     df = df.pivot(index='flowering_date', columns='plant_set', values='flower_count')
 
-    st.bar_chart(df)
+    if chart_type == 'Gráfico de barras':
+      st.bar_chart(df, stack=True if viz_type == 'Empilhado' else 'layered')
+    else:
+      st.area_chart(df, stack=True if viz_type == 'Empilhado' else 'layered')
+
+    expander = st.expander('Dados gerados')
+    expander.write('Abaixo estão os dados gerados para cada grupo de plantas adicionado:')
+    expander.dataframe(df)
 
 simulator_page = st.Page(page=simulator, title='Simulador', icon=':material/calculate:')
