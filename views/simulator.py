@@ -32,12 +32,14 @@ def simulator():
       exp.write(f'**Desvio padrão de dias para floração:** {plant_set.standard_deviation_flowering_day}')
       exp.write(f'**Média de flores por planta:** {plant_set.average_flowers_per_plant}')
       exp.write(f'**Desvio padrão de flores por planta:** {plant_set.standard_deviation_flowers_per_plant}')
-      if exp.button('Editar', key=str(index) + 'edit'):
+
+      col1, col2 = exp.columns(2)
+      if col1.button('Editar', key=str(index) + 'edit'):
         st.session_state.show_add_set = True
         add_set(index)
 
       # Adicionar botão para remover o grupo de plantas
-      if exp.button(':material/delete:', key=str(index) + 'delete'):
+      if col2.button(':material/delete:', key=str(index) + 'delete'):
         st.session_state.plant_sets = [s for i, s in enumerate(st.session_state.plant_sets) if i != index]
         st.rerun()
 
