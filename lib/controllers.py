@@ -8,8 +8,8 @@ def add_set(idx: int = None):
         set_name = st.text_input('Nome do grupo de plantas', value=plant_set.set_name)
         planting_date = st.date_input('Data de plantio', value=plant_set.planting_date)
         total_plants = st.number_input('Total de plantas', value=plant_set.total_plants, min_value=1, step=1)
-        average_flowering_day = st.number_input('Média de dias para floração', value=plant_set.average_flowering_day, min_value=1, step=1)
-        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para floração', value=plant_set.standard_deviation_flowering_day, min_value=1, step=1)
+        average_flowering_day = st.number_input('Média de dias para florescimento', value=plant_set.average_flowering_day, min_value=1, step=1)
+        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', value=plant_set.standard_deviation_flowering_day, min_value=1, step=1)
         average_flowers_per_plant = st.number_input('Média de flores por planta', value=plant_set.average_flowers_per_plant, min_value=1, step=1)
         standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', value=plant_set.standard_deviation_flowers_per_plant, min_value=1, step=1)
         button_label = "Salvar edição"
@@ -17,8 +17,8 @@ def add_set(idx: int = None):
         set_name = st.text_input('Nome do grupo de plantas')
         planting_date = st.date_input('Data de plantio')
         total_plants = st.number_input('Total de plantas', min_value=1, step=1)
-        average_flowering_day = st.number_input('Média de dias para floração', min_value=1, step=1)
-        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para floração', min_value=1, step=1)
+        average_flowering_day = st.number_input('Média de dias para florescimento', min_value=1, step=1)
+        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', min_value=1, step=1)
         average_flowers_per_plant = st.number_input('Média de flores por planta', min_value=1, step=1)
         standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', min_value=1, step=1)
         button_label = "Adicionar"
