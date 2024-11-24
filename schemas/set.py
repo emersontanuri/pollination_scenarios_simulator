@@ -20,10 +20,10 @@ class PlantSet(PlantSetBase):
   flowering_days_counter: Optional[Counter] = None
 
   def get_flowers_per_plant(self):
-    self.flowers_per_plant = [generate_positive_sample(self.average_flowers_per_plant, self.standard_deviation_flowers_per_plant) for _ in range(self.total_plants)]
-    
+    self.flowers_per_plant = generate_positive_sample(self.average_flowers_per_plant, self.standard_deviation_flowers_per_plant, size=self.total_plants)
+  
   def get_flowering_days(self):
-    self.flowering_days = [[generate_positive_sample(self.average_flowering_day, self.standard_deviation_flowering_day) for _ in range(round(flower_count))] for flower_count in self.flowers_per_plant]
+    self.flowering_days = [generate_positive_sample(self.average_flowering_day, self.standard_deviation_flowering_day, size=round(flower_count)) for flower_count in self.flowers_per_plant]
   
   def get_flattened_flowering_days(self):
     self.flattened_flowering_days = [round(item) for sublist in self.flowering_days for item in sublist]

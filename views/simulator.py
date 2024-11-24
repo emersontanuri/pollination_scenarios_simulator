@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 from datetime import timedelta
 from lib.controllers import add_set
 
@@ -14,12 +15,10 @@ def simulator():
   st.title('Simulador de Janela de Polinização')
 
   st.write('Este simulador foi desenvolvido para ajudar a idealizar cenários de grupos de plantas com diferentes datas de plantio para redução de grandes picos de polinização, o que pode ser útil para a planejamento de mão-de-obra e equipamentos.')
-  
-  st.markdown('### Adicionar grupo de plantas')
       
-  st.button('Adicionar novo grupo de plantas', on_click=add_set)
 
   st.markdown('### Grupos de plantas adicionados')
+  st.button('Adicionar grupo de plantas', on_click=add_set, type='primary')
 
   if len(st.session_state.plant_sets) == 0:
     st.write('Nenhum grupo de plantas foi adicionado.')
@@ -33,7 +32,7 @@ def simulator():
       exp.write(f'**Média de flores por planta:** {plant_set.average_flowers_per_plant}')
       exp.write(f'**Desvio padrão de flores por planta:** {plant_set.standard_deviation_flowers_per_plant}')
 
-      col1, col2 = exp.columns(2)
+      col1, col2 = exp.columns([1,9])
       if col1.button('Editar', key=str(index) + 'edit'):
         st.session_state.show_add_set = True
         add_set(index)
@@ -55,17 +54,21 @@ def simulator():
   viz_type = col2.radio('Tipo de visualização', ['Empilhado', 'Camadas'])
 
   st.write('A depender da quantidade de dados gerados, o gráfico pode demorar um pouco para ser exibido.')
-  if st.button('Gerar simulação de janela de polinização', type='primary', disabled=len(st.session_state.plant_sets) == 0):
+  time_container = st.container()
+  if st.button('Gerar simulação', type='primary', disabled=len(st.session_state.plant_sets) == 0):
+    start_time = datetime.now()
     df_list = []
     for s in st.session_state.plant_sets:
-      s.get_flowers_per_plant()
-      s.get_flowering_days()
-      s.get_flattened_flowering_days()
-      s.get_flowering_days_counter()
+      # Verificar se o s.flowering_days_counter está vazio, se sim, chamar os métodos abaixo
+      if s.flowering_days_counter is None:
+        s.get_flowers_per_plant()
+        s.get_flowering_days()
+        s.get_flattened_flowering_days()
+        s.get_flowering_days_counter()
 
       df = pd.DataFrame.from_dict(s.flowering_days_counter, orient='index', columns=['flower_count'])
       df['plant_set'] = s.set_name
-      df['flowering_date'] = [(s.planting_date + timedelta(days=x)).date() for x in df.index]
+      df['flowering_date'] = [(s.planting_date + timedelta(days=x)).strftime('%Y-%m-%d') for x in df.index]
       df_list.append(df.reset_index())
     
     df = pd.concat(df_list, axis=0)
@@ -79,5 +82,9 @@ def simulator():
     expander = st.expander('Dados gerados')
     expander.write('Abaixo estão os dados gerados para cada grupo de plantas adicionado:')
     expander.dataframe(df)
+    end_time = datetime.now()
+
+    elapsed_time = (end_time - start_time).total_seconds()
+    time_container.write(f'A simulação foi gerada em {elapsed_time:.2f} segundos.')
 
 simulator_page = st.Page(page=simulator, title='Simulador', icon=':material/calculate:')
