@@ -9,18 +9,20 @@ def add_set(idx: int = None):
         planting_date = st.date_input('Data de plantio', value=plant_set.planting_date)
         total_plants = st.number_input('Total de plantas', value=plant_set.total_plants, min_value=1, step=1)
         average_flowering_day = st.number_input('Média de dias para florescimento', value=plant_set.average_flowering_day, min_value=1, step=1)
-        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', value=plant_set.standard_deviation_flowering_day, min_value=1, step=1)
+        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', value=plant_set.standard_deviation_flowering_day, min_value=0, step=1)
         average_flowers_per_plant = st.number_input('Média de flores por planta', value=plant_set.average_flowers_per_plant, min_value=1, step=1)
-        standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', value=plant_set.standard_deviation_flowers_per_plant, min_value=1, step=1)
+        standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', value=plant_set.standard_deviation_flowers_per_plant, min_value=0, step=1)
+        average_worker_productivity_by_day = st.number_input('Média de polinizações por trabalhador por dia', value=plant_set.average_worker_productivity_by_day, min_value=1, step=1)
         button_label = "Salvar edição"
     else:
         set_name = st.text_input('Nome do grupo de plantas')
         planting_date = st.date_input('Data de plantio')
         total_plants = st.number_input('Total de plantas', min_value=1, step=1)
         average_flowering_day = st.number_input('Média de dias para florescimento', min_value=1, step=1)
-        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', min_value=1, step=1)
+        standard_deviation_flowering_day = st.number_input('Desvio padrão de dias para florescimento', min_value=0, step=1)
         average_flowers_per_plant = st.number_input('Média de flores por planta', min_value=1, step=1)
-        standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', min_value=1, step=1)
+        standard_deviation_flowers_per_plant = st.number_input('Desvio padrão de flores por planta', min_value=0, step=1)
+        average_worker_productivity_by_day = st.number_input('Média de polinizações por trabalhador por dia', min_value=1, step=1)
         button_label = "Adicionar"
 
     if st.button(button_label):
@@ -33,6 +35,7 @@ def add_set(idx: int = None):
             plant_set.standard_deviation_flowering_day = standard_deviation_flowering_day
             plant_set.average_flowers_per_plant = average_flowers_per_plant
             plant_set.standard_deviation_flowers_per_plant = standard_deviation_flowers_per_plant
+            plant_set.average_worker_productivity_by_day = average_worker_productivity_by_day
             plant_set.flowers_per_plant = []
             plant_set.flowering_days = []
             plant_set.flattened_flowering_days = []
@@ -47,7 +50,8 @@ def add_set(idx: int = None):
                 average_flowering_day=average_flowering_day,
                 standard_deviation_flowering_day=standard_deviation_flowering_day,
                 average_flowers_per_plant=average_flowers_per_plant,
-                standard_deviation_flowers_per_plant=standard_deviation_flowers_per_plant
+                standard_deviation_flowers_per_plant=standard_deviation_flowers_per_plant,
+                average_worker_productivity_by_day=average_worker_productivity_by_day
             )
             st.session_state.plant_sets.append(new_plant_set)
         st.rerun()

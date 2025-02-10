@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from datetime import datetime
 from datetime import timedelta
 from lib.controllers import add_set
@@ -69,19 +70,31 @@ def simulator():
       df = pd.DataFrame.from_dict(s.flowering_days_counter, orient='index', columns=['flower_count'])
       df['plant_set'] = s.set_name
       df['flowering_date'] = [(s.planting_date + timedelta(days=x)).strftime('%Y-%m-%d') for x in df.index]
+      df['workers_production'] = s.average_worker_productivity_by_day
+      df['necessary_workers'] = df['flower_count'] / df['workers_production']
+      df['necessary_workers'] = np.ceil(df['necessary_workers'])
       df_list.append(df.reset_index())
     
     df = pd.concat(df_list, axis=0)
-    df = df.pivot(index='flowering_date', columns='plant_set', values='flower_count')
+    flowers_df = df.pivot(index='flowering_date', columns='plant_set', values='flower_count')
+    workers_pivoted_df = df.pivot(index='flowering_date', columns='plant_set', values='necessary_workers')
+    workers_df = pd.DataFrame(df.groupby('flowering_date').agg(necessary_workers=('necessary_workers', 'sum')).to_records()).set_index('flowering_date')
 
     if chart_type == 'Gráfico de barras':
-      st.bar_chart(df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
+      st.bar_chart(flowers_df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
+      st.bar_chart(workers_pivoted_df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
     else:
-      st.area_chart(df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
+      st.area_chart(flowers_df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
+      st.area_chart(workers_pivoted_df, stack=True if viz_type == 'Empilhado' else 'layered', height=640)
 
     expander = st.expander('Dados gerados')
     expander.write('Abaixo estão os dados gerados para cada grupo de plantas adicionado:')
-    expander.dataframe(df)
+
+    flowering_data, workers_data = expander.columns(2)
+    flowering_data.write('#### Florescimento')
+    flowering_data.dataframe(flowers_df.merge(workers_df, on='flowering_date', how='outer'))
+    workers_data.write('#### Mão-de-obra necessária')
+    workers_data.dataframe(workers_pivoted_df)
     end_time = datetime.now()
 
     elapsed_time = (end_time - start_time).total_seconds()

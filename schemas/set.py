@@ -12,6 +12,7 @@ class PlantSetBase(BaseModel):
   total_plants: int
   average_flowers_per_plant: int
   standard_deviation_flowers_per_plant: int
+  average_worker_productivity_by_day: int
 
 class PlantSet(PlantSetBase):
   flowers_per_plant: List = []
